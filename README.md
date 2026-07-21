@@ -91,7 +91,7 @@ The service will:
 - Apply file-size, duration, processing-time, and concurrency limits.
 - Support HTTP range requests for reliable audio playback.
 
-## Planned solution structure
+## Solution structure
 
 ```text
 src/
@@ -107,7 +107,22 @@ tests/
   AlexaCloudAudio.Skill.Tests/
 ```
 
-Cloud SDKs and hosting concerns must remain outside the domain and application contracts.
+Cloud SDKs and hosting concerns must remain outside the domain and application contracts. Architecture smoke tests enforce the allowed project-reference direction.
+
+## Development
+
+Install the .NET 10 SDK selected by `global.json`, then run commands from the repository root.
+
+```powershell
+dotnet restore AlexaCloudAudio.slnx
+dotnet build AlexaCloudAudio.slnx --configuration Release --no-restore
+dotnet test AlexaCloudAudio.slnx --configuration Release --no-build --settings coverlet.runsettings --collect:"XPlat Code Coverage" --results-directory TestResults
+dotnet format AlexaCloudAudio.slnx --verify-no-changes
+```
+
+Coverage output is written beneath `TestResults`. Both total line and branch coverage must remain at or above 80%.
+
+CI uses the reusable workflow in `ScottyMac52/shared-github-workflows`; repository workflow files remain thin callers unless project-specific behavior is required.
 
 ## Engineering standards
 
@@ -146,7 +161,7 @@ The following are intentionally outside the first MVP:
 
 ## Project status
 
-MVP architecture decisions are complete. The next implementation step is [issue #2](https://github.com/ScottyMac52/AlexaCloudAudio/issues/2), which creates the .NET solution and TDD quality foundation.
+The architecture and .NET/TDD foundation are established. The next implementation step is [issue #3](https://github.com/ScottyMac52/AlexaCloudAudio/issues/3), which adds the domain model and provider-neutral audio catalog.
 
 ## License
 
