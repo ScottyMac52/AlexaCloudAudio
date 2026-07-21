@@ -20,11 +20,16 @@ The first release will provide:
 - Case-insensitive, extension-independent sound-name matching.
 - Aliases for convenient spoken names.
 - Secure, expiring playback URLs.
-- WAV files accepted as source content and transcoded when Alexa-compatible delivery is required.
+- WAV files accepted as source content and transcoded to an Alexa-compatible MP3 delivery format when required.
 - Play, stop, pause, resume, help, not-found, and ambiguous-match behavior.
 - Automated tests with minimum 80% line and 80% branch coverage.
 
-## Proposed architecture
+## Architecture
+
+The accepted MVP architecture is documented in:
+
+- [MVP architecture](docs/architecture.md)
+- [Architecture decision log](docs/decision-log.md)
 
 ```text
 Alexa Echo
@@ -46,7 +51,7 @@ AlexaCloudAudio Skill Endpoint
     +--> Audio Preparation Service
     |         |
     |         +--> validation
-    |         +--> transcoding when required
+    |         +--> FFmpeg transcoding when required
     |         +--> version-aware cache
     |
     +--> Signed Playback URL Service
@@ -58,24 +63,35 @@ AlexaCloudAudio Skill Endpoint
           Alexa AudioPlayer
 ```
 
+Key accepted decisions include:
+
+- .NET 10 with Domain, Application, Infrastructure, and Skill layers.
+- AWS Lambda as the initial deployment target with an ASP.NET Core-compatible endpoint.
+- Owned Alexa boundary DTOs with compatibility tests.
+- Microsoft OAuth authorization-code flow with refresh support and least-privilege Graph scopes.
+- OneDrive-first implementation behind `IAudioLibraryProvider`.
+- Deterministic normalized-name and alias matching.
+- FFmpeg-based MP3 preparation with version-aware caching.
+- Signed, expiring playback grants and HTTP range support.
+- Managed secrets in deployment and .NET user-secrets locally.
+
 ## Security model
 
 AlexaCloudAudio must never expose Microsoft or Google access tokens, authorization headers, or durable cloud-storage URLs to Alexa.
 
 The service will:
 
+- Validate Alexa signatures, timestamps, and expected skill identity.
 - Use least-privilege OAuth scopes.
 - Store OAuth credentials only in an approved encrypted or managed secret store.
 - Resolve cloud download URLs only when required.
-- Avoid caching short-lived preauthenticated cloud URLs beyond their valid lifetime.
+- Never persist short-lived preauthenticated cloud URLs as catalog data.
 - Return signed, tamper-resistant, expiring playback URLs.
 - Redact credentials, signed URLs, and authorization headers from logs.
 - Apply file-size, duration, processing-time, and concurrency limits.
 - Support HTTP range requests for reliable audio playback.
 
 ## Planned solution structure
-
-The final structure will be confirmed by the architecture decision issue, but the intended dependency direction is:
 
 ```text
 src/
@@ -130,7 +146,7 @@ The following are intentionally outside the first MVP:
 
 ## Project status
 
-The project is currently in architecture and foundation planning. Start with [issue #1](https://github.com/ScottyMac52/AlexaCloudAudio/issues/1).
+MVP architecture decisions are complete. The next implementation step is [issue #2](https://github.com/ScottyMac52/AlexaCloudAudio/issues/2), which creates the .NET solution and TDD quality foundation.
 
 ## License
 
