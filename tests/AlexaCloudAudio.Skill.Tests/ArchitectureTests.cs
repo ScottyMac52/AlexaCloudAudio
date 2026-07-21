@@ -7,6 +7,9 @@ public sealed class ArchitectureTests
     [Fact]
     public void Skill_references_only_application_and_infrastructure_directly()
     {
+        Assert.Equal(typeof(global::AlexaCloudAudio.Application.AssemblyMarker), global::AlexaCloudAudio.Skill.AssemblyMarker.ApplicationAssembly);
+        Assert.Equal(typeof(global::AlexaCloudAudio.Infrastructure.AssemblyMarker), global::AlexaCloudAudio.Skill.AssemblyMarker.InfrastructureAssembly);
+
         var references = typeof(global::AlexaCloudAudio.Skill.AssemblyMarker).Assembly
             .GetReferencedAssemblies()
             .Select(static assembly => assembly.Name)
