@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AlexaCloudAudio.Domain/AlexaCloudAudio.Domain.csproj" />
+    <Project Path="src/AlexaCloudAudio.Application/AlexaCloudAudio.Application.csproj" />
+    <Project Path="src/AlexaCloudAudio.Infrastructure/AlexaCloudAudio.Infrastructure.csproj" />
+    <Project Path="src/AlexaCloudAudio.Skill/AlexaCloudAudio.Skill.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AlexaCloudAudio.Domain.Tests/AlexaCloudAudio.Domain.Tests.csproj" />
+    <Project Path="tests/AlexaCloudAudio.Application.Tests/AlexaCloudAudio.Application.Tests.csproj" />
+    <Project Path="tests/AlexaCloudAudio.Infrastructure.Tests/AlexaCloudAudio.Infrastructure.Tests.csproj" />
+    <Project Path="tests/AlexaCloudAudio.Skill.Tests/AlexaCloudAudio.Skill.Tests.csproj" />
+  </Folder>
+</Solution>
