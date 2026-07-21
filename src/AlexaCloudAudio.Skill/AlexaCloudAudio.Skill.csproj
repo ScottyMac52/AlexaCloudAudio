@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../AlexaCloudAudio.Application/AlexaCloudAudio.Application.csproj" />
+    <ProjectReference Include="../AlexaCloudAudio.Infrastructure/AlexaCloudAudio.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>
