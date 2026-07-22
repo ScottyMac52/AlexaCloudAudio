@@ -17,6 +17,7 @@ public sealed class ArchitectureTests
             .Order(StringComparer.Ordinal)
             .ToArray();
 
-        Assert.Equal(["AlexaCloudAudio.Application", "AlexaCloudAudio.Infrastructure"], references);
+        var expected = new[] { "AlexaCloudAudio.Application", "AlexaCloudAudio.Infrastructure" };
+        Assert.Equal(expected, references);
     }
 }
