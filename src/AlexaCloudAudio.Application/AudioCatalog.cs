@@ -35,8 +35,14 @@ public sealed class AudioCatalog : IAudioCatalog
 
     private static void ValidateAliasCollisions(IReadOnlyList<AudioItem> audioItems)
     {
-        var owners = new Dictionary<string, string>(StringComparer.Ordinal);
+        var nameOwners = new Dictionary<string, HashSet<string>>(StringComparer.Ordinal);
+        foreach (var item in audioItems)
+        {
+            AddOwner(nameOwners, AudioNameNormalizer.Normalize(item.SourceFileName), item.ProviderId);
+            AddOwner(nameOwners, AudioNameNormalizer.Normalize(item.DisplayName), item.ProviderId);
+        }
 
+        var aliasOwners = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var item in audioItems)
         {
             foreach (var alias in item.Aliases)
@@ -47,13 +53,31 @@ public sealed class AudioCatalog : IAudioCatalog
                     continue;
                 }
 
-                if (owners.TryGetValue(normalized, out var owner) && !StringComparer.Ordinal.Equals(owner, item.ProviderId))
+                if (nameOwners.TryGetValue(normalized, out var namedItems)
+                    && namedItems.Any(owner => !StringComparer.Ordinal.Equals(owner, item.ProviderId)))
+                {
+                    throw new AudioCatalogValidationException($"Alias '{alias}' collides with another audio item name.");
+                }
+
+                if (aliasOwners.TryGetValue(normalized, out var owner)
+                    && !StringComparer.Ordinal.Equals(owner, item.ProviderId))
                 {
                     throw new AudioCatalogValidationException($"Alias '{alias}' is assigned to multiple audio items.");
                 }
 
-                owners[normalized] = item.ProviderId;
+                aliasOwners[normalized] = item.ProviderId;
             }
         }
+    }
+
+    private static void AddOwner(Dictionary<string, HashSet<string>> owners, string normalizedName, string providerId)
+    {
+        if (!owners.TryGetValue(normalizedName, out var itemOwners))
+        {
+            itemOwners = new HashSet<string>(StringComparer.Ordinal);
+            owners[normalizedName] = itemOwners;
+        }
+
+        itemOwners.Add(providerId);
     }
 }
