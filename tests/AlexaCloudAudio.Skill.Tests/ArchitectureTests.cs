@@ -5,7 +5,7 @@ namespace AlexaCloudAudio.Skill.Tests;
 public sealed class ArchitectureTests
 {
     [Fact]
-    public void Skill_references_only_application_and_infrastructure_directly()
+    public void Skill_references_only_provider_neutral_solution_layers_directly()
     {
         Assert.Equal(typeof(global::AlexaCloudAudio.Application.AssemblyMarker), global::AlexaCloudAudio.Skill.AssemblyMarker.ApplicationAssembly);
         Assert.Equal(typeof(global::AlexaCloudAudio.Infrastructure.AssemblyMarker), global::AlexaCloudAudio.Skill.AssemblyMarker.InfrastructureAssembly);
@@ -17,7 +17,12 @@ public sealed class ArchitectureTests
             .Order(StringComparer.Ordinal)
             .ToArray();
 
-        var expected = new[] { "AlexaCloudAudio.Application", "AlexaCloudAudio.Infrastructure" };
+        var expected = new[]
+        {
+            "AlexaCloudAudio.Application",
+            "AlexaCloudAudio.Domain",
+            "AlexaCloudAudio.Infrastructure"
+        };
         Assert.Equal(expected, references);
     }
 }
