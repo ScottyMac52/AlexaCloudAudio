@@ -13,33 +13,6 @@ permissions:
   contents: read
 
 jobs:
-  skill-tests-diagnostic:
-    name: Skill Tests Diagnostic
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '10.0.x'
-      - name: Restore Skill tests
-        run: dotnet restore tests/AlexaCloudAudio.Skill.Tests/AlexaCloudAudio.Skill.Tests.csproj
-      - name: Run Skill tests and capture transcript
-        id: skilltests
-        shell: pwsh
-        continue-on-error: true
-        run: |
-          dotnet test tests/AlexaCloudAudio.Skill.Tests/AlexaCloudAudio.Skill.Tests.csproj -c Release --no-restore --logger "console;verbosity=detailed" *>&1 | Tee-Object -FilePath skill-test.log
-          exit $LASTEXITCODE
-      - name: Upload Skill test transcript
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: skill-test-transcript
-          path: skill-test.log
-      - name: Fail when Skill tests fail
-        if: steps.skilltests.outcome == 'failure'
-        run: exit 1
-
   quality:
     name: Build, Test, and Coverage
     uses: ScottyMac52/shared-github-workflows/.github/workflows/reusable-build-and-release.yml@main
