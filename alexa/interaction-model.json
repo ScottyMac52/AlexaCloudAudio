@@ -1,0 +1,31 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "cloud audio",
+      "intents": [
+        {
+          "name": "PlaySoundIntent",
+          "slots": [
+            {
+              "name": "soundName",
+              "type": "AMAZON.SearchQuery"
+            }
+          ],
+          "samples": [
+            "play {soundName}",
+            "play the sound {soundName}",
+            "start {soundName}",
+            "find and play {soundName}"
+          ]
+        },
+        { "name": "AMAZON.HelpIntent", "samples": [] },
+        { "name": "AMAZON.StopIntent", "samples": [] },
+        { "name": "AMAZON.CancelIntent", "samples": [] },
+        { "name": "AMAZON.PauseIntent", "samples": [] },
+        { "name": "AMAZON.ResumeIntent", "samples": [] },
+        { "name": "AMAZON.FallbackIntent", "samples": [] }
+      ],
+      "types": []
+    }
+  }
+}
